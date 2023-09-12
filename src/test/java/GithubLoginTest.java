@@ -1,42 +1,61 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
 public class GithubLoginTest {
+    private WebDriver driver;
 
-    public void loginFirefox(String email, String password){
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
-
-        FirefoxDriver firefoxDriver = new FirefoxDriver();
-        firefoxDriver.get("https://github.com/login");
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        WebElement emailField = firefoxDriver.findElement(By.id("login_field"));
-        emailField.sendKeys(email);
-        WebElement pass = firefoxDriver.findElement(By.id("password"));
-        pass.sendKeys(password);
-
-        pass.submit();
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        firefoxDriver.quit();
+    @Test
+    public void loginSuccessChrome() {
+        testLogin("nairamnatsakanyan997@gmail.com", "Aca2023#", "chrome", "success");
     }
 
-    public void loginChrome(String password, String email) {
-        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+    @Test
+    public void invalidPasswordChrome() {
+        testLogin("nairamnatsakanyan997@gmail.com", "Aca2024#", "chrome", "");
+    }
 
-        ChromeDriver driver = new ChromeDriver();
+    @Test
+    public void invalidEmailChrome() {
+        testLogin("nairamnatsakanyan998@gmail.com", "Aca2023#", "chrome", "");
+    }
+
+    @Test
+    public void loginSuccessFirefox() {
+        testLogin("nairamnatsakanyan997@gmail.com", "Aca2023#", "firefox", "success");
+    }
+
+    @Test
+    public void invalidPasswordFirefox() {
+        testLogin("nairamnatsakanyan997@gmail.com", "Aca2024#", "firefox", "");
+    }
+
+    @Test
+    public void invalidEmailFirefox() {
+        testLogin("nairamnatsakanyan998@gmail.com", "Aca2023#", "firefox", "");
+    }
+
+    public void setUpChromeDriver() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        driver = new ChromeDriver();
+    }
+
+    public void setUpFirefoxDriver() {
+        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
+        driver = new FirefoxDriver();
+    }
+
+    private void testLogin(String username, String password, String browser, String caseType) {
+        if (browser == "chrome") {
+            setUpChromeDriver();
+        } else if (browser == "firefox") {
+            setUpFirefoxDriver();
+        }
+
         driver.get("https://github.com/login");
 
         try {
@@ -45,51 +64,25 @@ public class GithubLoginTest {
             throw new RuntimeException(e);
         }
 
-        WebElement pass = driver.findElement(By.id("password"));
-        pass.sendKeys(password);
-        WebElement emailField = driver.findElement(By.id("login_field"));
-        emailField.sendKeys(email);
+        WebElement usernameField = driver.findElement(By.name("login"));
+        WebElement passwordField = driver.findElement(By.name("password"));
+        WebElement loginButton = driver.findElement(By.name("commit"));
 
-        pass.submit();
+        usernameField.sendKeys(username);
+        passwordField.sendKeys(password);
+        loginButton.click(); // or passwordField.submit();
+
+        if (caseType != "success") {
+            WebElement errorElement = driver.findElement(By.className("js-flash-alert"));
+            Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
+        }
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-
         driver.quit();
     }
-    @Test
-    public void loginSuccessFirefox() throws InterruptedException{
-        loginFirefox("nairamnatsakanyan997@gmail.com","Aca2023#");
-    }
-
-   @Test
-    public void invalidPasswordFirefox() throws InterruptedException{
-       loginFirefox("nairamnatsakanyan997@gmail.com","Aca2024#");
-
-    }
-
-    @Test
-    public void invalidEmailFirefox() throws InterruptedException{
-        loginFirefox("nairamnatsakanyan998@gmail.com","Aca2023#");
-    }
-
-    @Test
-    public void loginSuccessChrome() throws InterruptedException{
-        loginChrome("Aca2023#", "nairamnatsakanyan997@gmail.com");
-    }
-
-    @Test
-    public void invalidPasswordChrome() throws InterruptedException{
-        loginChrome("Aca2024#", "nairamnatsakanyan997@gmail.com");
-    }
-
-    @Test
-    public void invalidEmailChrome() throws InterruptedException{
-        loginChrome("Aca2023#", "nairamnatsakanyan998@gmail.com");
-    }
-
 }
