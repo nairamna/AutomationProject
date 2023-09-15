@@ -7,56 +7,14 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class GithubLoginTest {
-    private WebDriver driver;
+
 
     @Test
     public void loginSuccessChrome() {
-        testLogin("nairamnatsakanyan997@gmail.com", "Aca2023#", "chrome", "success");
-    }
+            System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
 
-    @Test
-    public void invalidPasswordChrome() {
-        testLogin("nairamnatsakanyan997@gmail.com", "Aca2024#", "chrome", "");
-    }
-
-    @Test
-    public void invalidEmailChrome() {
-        testLogin("nairamnatsakanyan998@gmail.com", "Aca2023#", "chrome", "");
-    }
-
-    @Test
-    public void loginSuccessFirefox() {
-        testLogin("nairamnatsakanyan997@gmail.com", "Aca2023#", "firefox", "success");
-    }
-
-    @Test
-    public void invalidPasswordFirefox() {
-        testLogin("nairamnatsakanyan997@gmail.com", "Aca2024#", "firefox", "");
-    }
-
-    @Test
-    public void invalidEmailFirefox() {
-        testLogin("nairamnatsakanyan998@gmail.com", "Aca2023#", "firefox", "");
-    }
-
-    public void setUpChromeDriver() {
-        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
-        driver = new ChromeDriver();
-    }
-
-    public void setUpFirefoxDriver() {
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
-        driver = new FirefoxDriver();
-    }
-
-    private void testLogin(String username, String password, String browser, String caseType) {
-        if (browser == "chrome") {
-            setUpChromeDriver();
-        } else if (browser == "firefox") {
-            setUpFirefoxDriver();
-        }
-
-        driver.get("https://github.com/login");
+            ChromeDriver driver = new ChromeDriver();
+            driver.get("https://github.com/login");
 
         try {
             Thread.sleep(5000);
@@ -68,14 +26,11 @@ public class GithubLoginTest {
         WebElement passwordField = driver.findElement(By.name("password"));
         WebElement loginButton = driver.findElement(By.name("commit"));
 
-        usernameField.sendKeys(username);
-        passwordField.sendKeys(password);
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+        passwordField.sendKeys("Aca2023#");
         loginButton.click(); // or passwordField.submit();
 
-        if (caseType != "success") {
-            WebElement errorElement = driver.findElement(By.className("js-flash-alert"));
-            Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
-        }
+
 
         try {
             Thread.sleep(5000);
@@ -83,6 +38,157 @@ public class GithubLoginTest {
             throw new RuntimeException(e);
         }
 
+
+        By locatorOfAvatarElement = By.cssSelector(".Button-label .avatar.circle");
+        SeleniumActions actions = new SeleniumActions(driver);
+        boolean isLocatorOfAvatarElementDisplayed = actions.isDisplayed(locatorOfAvatarElement, 5);
+        Assert.assertTrue(isLocatorOfAvatarElementDisplayed);
+
         driver.quit();
+        }
+
+        @Test
+        public void testLoginWithEmptyPasswordChrome() {
+            System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+            ChromeDriver driver = new ChromeDriver();
+            driver.get("https://github.com/login");
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            WebElement usernameField = driver.findElement(By.name("login"));
+            WebElement passwordField = driver.findElement(By.name("password"));
+            WebElement loginButton = driver.findElement(By.name("commit"));
+
+            usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+            passwordField.sendKeys("");
+            loginButton.click(); // or passwordField.submit();
+
+
+            WebElement errorElement = driver.findElement(By.className("js-flash-alert"));
+            Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
+
+            System.out.println("Password field is empty");
+            driver.quit();
+        }
+
+        @Test
+        public void testLoginWithWrongPasswordChrome(){
+            System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+            ChromeDriver driver = new ChromeDriver();
+            driver.get("https://github.com/login");
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            WebElement usernameField = driver.findElement(By.name("login"));
+            WebElement passwordField = driver.findElement(By.name("password"));
+            WebElement loginButton = driver.findElement(By.name("commit"));
+
+            usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+            passwordField.sendKeys("hgggggf");
+            loginButton.click(); // or passwordField.submit();
+
+
+            WebElement errorElement = driver.findElement(By.className("js-flash-alert"));
+            Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
+
+            System.out.println("Password field is incorrect");
+
+            driver.quit();
+        }
+
+    @Test
+    public void loginSuccessFirefox() {
+        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
+
+        FirefoxDriver geckoDriver = new FirefoxDriver();
+        geckoDriver.get("https://github.com/login");
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebElement usernameField = geckoDriver.findElement(By.name("login"));
+        WebElement passwordField = geckoDriver.findElement(By.name("password"));
+        WebElement loginButton = geckoDriver.findElement(By.name("commit"));
+
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+        passwordField.sendKeys("Aca2023#");
+        loginButton.click(); // or passwordField.submit();
+
+
+
+        geckoDriver.quit();
+    }
+
+    @Test
+    public void testLoginWithEmptyPasswordFirefox() {
+        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
+
+        FirefoxDriver geckoDriver = new FirefoxDriver();
+        geckoDriver.get("https://github.com/login");
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebElement usernameField = geckoDriver.findElement(By.name("login"));
+        WebElement passwordField = geckoDriver.findElement(By.name("password"));
+        WebElement loginButton = geckoDriver.findElement(By.name("commit"));
+
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+        passwordField.sendKeys("");
+        loginButton.click(); // or passwordField.submit();
+
+
+        WebElement errorElement = geckoDriver.findElement(By.className("js-flash-alert"));
+        Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
+
+        System.out.println("Password field is empty");
+
+        geckoDriver.quit();
+    }
+
+    @Test
+    public void testLoginWithWrongPasswordFirefox() {
+        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
+
+        FirefoxDriver geckoDriver = new FirefoxDriver();
+        geckoDriver.get("https://github.com/login");
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebElement usernameField = geckoDriver.findElement(By.name("login"));
+        WebElement passwordField = geckoDriver.findElement(By.name("password"));
+        WebElement loginButton = geckoDriver.findElement(By.name("commit"));
+
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+        passwordField.sendKeys("loihfffd");
+        loginButton.click(); // or passwordField.submit();
+
+
+        WebElement errorElement = geckoDriver.findElement(By.className("js-flash-alert"));
+        Assert.assertEquals(errorElement.getText(), "Incorrect username or password.");
+
+        System.out.println("Password field is incorrect");
+
+        geckoDriver.quit();
     }
 }

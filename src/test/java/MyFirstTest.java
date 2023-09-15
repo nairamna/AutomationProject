@@ -1,45 +1,21 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class MyFirstTest {
 
     @Test
-    public void myFirstTestCase() throws InterruptedException{
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
+    public void loginSuccessChrome() {
 
-        FirefoxDriver firefoxDriver = new FirefoxDriver();
-        firefoxDriver.get("https://www.facebook.com/");
-
-        Thread.sleep(5000);
-
-        firefoxDriver.quit();
-    }
-
-
-
-    @Test
-    public void mySecondTestCase() throws InterruptedException{
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
-
-        FirefoxDriver firefoxDriver= new FirefoxDriver();
-        firefoxDriver.get("https://www.google.com/");
-
-        Thread.sleep(5000);
-        firefoxDriver.quit();
-    }
-
-
-
-    @Test
-    public void loginTest(){
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
-
-        FirefoxDriver firefoxDriver = new FirefoxDriver();
-        firefoxDriver.get("https://www.facebook.com/");
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        ChromeDriver driver = new ChromeDriver();
 
         try {
             Thread.sleep(5000);
@@ -47,27 +23,26 @@ public class MyFirstTest {
             throw new RuntimeException(e);
         }
 
-        WebElement emailField = firefoxDriver.findElementById("email");
-        WebElement passwordField = firefoxDriver.findElementById("pass");
-        WebElement loginButton = firefoxDriver.findElementByName("login");
+        driver.get("https://github.com/login");
 
+        WebElement usernameField = driver.findElement(By.name("login"));
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
 
-        emailField.sendKeys("hatrghss");
-        passwordField.sendKeys("gfhjjhyt879LL(");
+        WebElement passwordField = driver.findElement(By.name("password"));
+        passwordField.sendKeys("Aca2023");
 
-        loginButton.click(); // or passwordField.submit();
+        WebElement loginButton = driver.findElement(By.name("commit"));
+        loginButton.click();
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        By locatorOfAvatarElement = By.cssSelector(".Button-label .avatar.circle");
+        SeleniumActions actions = new SeleniumActions(driver);
+        boolean isLocatorOfAvatarElementDisplayed = actions.isDisplayed(locatorOfAvatarElement, 10);
+        Assert.assertTrue(isLocatorOfAvatarElementDisplayed);
 
-        WebElement errorElement = firefoxDriver.findElement(By.className("_9ay7"));
-        System.out.println(errorElement.getText());
-
-        Assert.assertEquals(errorElement.getText(), "The email or mobile number you entered isn’t connected to an account. Find your account and log in.");
-
+        driver.quit();
 
     }
+
+
+    //will add other 5 cases in the weekend!
 }
