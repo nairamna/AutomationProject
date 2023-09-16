@@ -8,8 +8,39 @@ import org.testng.annotations.Test;
 
 public class GithubLoginTest {
 
-
     @Test
+    public void loginSuccessChrome() {
+
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        ChromeDriver driver = new ChromeDriver();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        driver.get("https://github.com/login");
+
+        WebElement usernameField = driver.findElement(By.name("login"));
+        usernameField.sendKeys("nairamnatsakanyan997@gmail.com");
+
+        WebElement passwordField = driver.findElement(By.name("password"));
+        passwordField.sendKeys("Aca2023");
+
+        WebElement loginButton = driver.findElement(By.name("commit"));
+        loginButton.click();
+
+        By locatorOfAvatarElement = By.cssSelector(".Button-label .avatar.circle");
+        SeleniumActions actions = new SeleniumActions(driver);
+        boolean isLocatorOfAvatarElementDisplayed = actions.isDisplayed(locatorOfAvatarElement, 10);
+        Assert.assertTrue(isLocatorOfAvatarElementDisplayed);
+
+        driver.quit();
+
+    }
+
+   /* @Test
     public void loginSuccessChrome() {
             System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
 
@@ -47,6 +78,8 @@ public class GithubLoginTest {
         driver.quit();
         }
 
+
+    */
         @Test
         public void testLoginWithEmptyPasswordChrome() {
             System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
