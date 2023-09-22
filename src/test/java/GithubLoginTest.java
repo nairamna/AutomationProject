@@ -23,6 +23,8 @@ public class GithubLoginTest {
     public void before(){
         driver = WebDriverUtil.getWebDriver();
         driver.get("https://github.com/login");
+        LoginPage loginPage = new LoginPage(driver);
+        Assert.assertTrue(loginPage.isDisplayed());
     }
 
     /**
@@ -40,7 +42,6 @@ public class GithubLoginTest {
     public void loginSuccessChrome() {
 
         LoginPage loginPage = new LoginPage(driver);
-        Assert.assertTrue(loginPage.isDisplayed());
         loginPage.login("nairamnatsakanyan997@gmail.com", "Aca2023#");
         HomePage homePage = new HomePage(driver);
         Assert.assertTrue(homePage.isDisplayed());
@@ -60,9 +61,7 @@ public class GithubLoginTest {
     public void testLoginWithEmptyPasswordChrome() {
 
 
-       SeleniumActions actions = new SeleniumActions(driver);
        LoginPage loginPage = new LoginPage(driver);
-       Assert.assertTrue(loginPage.isDisplayed());
        loginPage.login("nairamnatsakanyan997@gmail.com", "");
        WebElement errorMessageElement = driver.findElement(By.className("js-flash-alert"));
        Assert.assertEquals(errorMessageElement.getText(), "Incorrect username or password.");
@@ -86,9 +85,7 @@ public class GithubLoginTest {
         @Test
         public void testLoginWithWrongPasswordChrome(){
 
-            SeleniumActions actions = new SeleniumActions(driver);
             LoginPage loginPage = new LoginPage(driver);
-            Assert.assertTrue(loginPage.isDisplayed());
             loginPage.login("nairamnatsakanyan997@gmail.com", "jhgff");
             WebElement errorMessageElement = driver.findElement(By.className("js-flash-alert"));
             Assert.assertEquals(errorMessageElement.getText(), "Incorrect username or password.");
