@@ -1,7 +1,10 @@
+package pages;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import pages.BasePage;
 
 public class LoginPage extends BasePage {
     By emailFieldLocator = By.name("login");
@@ -23,4 +26,7 @@ public class LoginPage extends BasePage {
         boolean isLoginButtonDisplayed = actions.isDisplayed(loginButtonLocator, 10);
         return isLoginButtonDisplayed;
     }
+
+
+
 }

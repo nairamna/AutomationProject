@@ -1,5 +1,8 @@
+package pages;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import util.SeleniumActions;
 
 public abstract class BasePage implements Loadable {
     protected WebDriver driver;
